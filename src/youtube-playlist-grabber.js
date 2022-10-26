@@ -3,15 +3,15 @@ import fs from 'fs';
 
 async function mainplaylists() {
     const API_KEY = process.env["API_KEY"];
-    const listofplaylists = (await (await fetch(`https://youtube.googleapis.com/youtube/v3/playlists?part=snippet%2CcontentDetails&channelId=UCPmLjfSUj3L-Xy9dmQk4rgw&maxResults=500&key=${API_KEY}`)).json()).items
+    const CHANNEL_ID = process.env["CHANNEL_ID"];
+    const listofplaylists = (await (await fetch(`https://youtube.googleapis.com/youtube/v3/playlists?part=snippet%2CcontentDetails&channelId=${CHANNEL_ID}&maxResults=500&key=${API_KEY}`)).json()).items
 
-    console.log(listofplaylists);
     let playlistids = [];
     let playlistnames = [];
     for(let i = 0; i < listofplaylists.length; i++) {
         const playlist = listofplaylists[i];
         playlistids.push(playlist.id);
-        playlistnames.push(playlist.snippet.title)
+        playlistnames.push(playlist.snippet.title);
     }
     let playlistsVideos = {};
     let nextpagetoken = "";
@@ -19,13 +19,12 @@ async function mainplaylists() {
         const playlistid = playlistids[i];
         let videoids = [];
         while(nextpagetoken !== undefined) {
-            const playlistdatastuff = (await(await fetch(`https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet%2CcontentDetails&maxResults=500&playlistId=${playlistid}&key=${API_KEY}${(i > 0) ? `&pageToken=${nextpagetoken}` : ''}`)).json())
-            const playlistcontents = playlistdatastuff.items
+            const playlistdatastuff = await(await fetch(`https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet%2CcontentDetails&maxResults=500&playlistId=${playlistid}&key=${API_KEY}${(i > 0) ? `&pageToken=${nextpagetoken}` : ''}`)).json();
+            const playlistcontents = playlistdatastuff.items;
             for(let j = 0; j < playlistcontents.length; j++) {
                 const video = playlistcontents[j];
                 videoids.push(video.snippet.resourceId.videoId);
             }
-            console.log(nextpagetoken)
             nextpagetoken = playlistdatastuff.nextPageToken;
         }
         playlistsVideos[playlistid] = videoids;
@@ -78,7 +77,7 @@ async function mainplaylists() {
                 method: "POST",
                 headers: {'Content-Type': 'application/json'}, 
                 body: JSON.stringify(videoData)
-            })).json()
+            })).json();
         }
         i++;
     }

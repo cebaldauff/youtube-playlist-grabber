@@ -6,4 +6,4 @@
 ## Usage
 > $ source ${name}-env.sh
 > 
-> $ node youtube-playlist-grabber.js
+> $ node src/youtube-playlist-grabber.js

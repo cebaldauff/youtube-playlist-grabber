@@ -2,7 +2,7 @@
   "name": "youtube-grabber",
   "version": "1.0.0",
   "description": "",
-  "main": "youtube-playlist-grabber.js",
+  "main": "src/youtube-playlist-grabber.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
