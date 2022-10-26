@@ -1,0 +1,6 @@
+*-env.sh
+!example-env.sh
+data/*
+!data/README.md
+# package-lock.json
+node_modules
